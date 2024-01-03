@@ -5,6 +5,7 @@ var columns = 9;
 let score = 0;
 var currTile;
 var otherTile;
+var startX, startY, endX, endY;
 window.onload = function() {
     startGame();
     window.setInterval(function(){
@@ -183,5 +184,107 @@ function generateCandy() {
 }
 function resetScore() {
     score = 0;
+    document.getElementById("score").innerText = score;
+}
+
+function touchStart(event) {
+    startX = event.touches[0].clientX;
+    startY = event.touches[0].clientY;
+}
+
+function touchEnd(event) {
+    endX = event.changedTouches[0].clientX;
+    endY = event.changedTouches[0].clientY;
+
+    handleSwipe();
+}
+
+function handleSwipe() {
+    var deltaX = endX - startX;
+    var deltaY = endY - startY;
+
+    if (Math.abs(deltaX) > Math.abs(deltaY)) {
+        if (deltaX > 0) {
+            moveCandiesRight();
+        } else {
+            moveCandiesLeft();
+        }
+    } else {
+        if (deltaY > 0) {
+            moveCandiesDown();
+        } else {
+            moveCandiesUp();
+        }
+    }
+}
+
+document.addEventListener('touchstart', touchStart);
+document.addEventListener('touchend', touchEnd);
+
+function moveCandiesRight() {
+    for (let r = 0; r < rows; r++) {
+        for (let c = columns - 2; c >= 0; c--) {
+            if (!board[r][c].src.includes("blank")) {
+                let currentCandy = board[r][c].src;
+                let nextCandy = board[r][c + 1].src;
+
+                board[r][c].src = nextCandy;
+                board[r][c + 1].src = currentCandy;
+            }
+        }
+    }
+    checkAndCrush();
+}
+
+function moveCandiesLeft() {
+    for (let r = 0; r < rows; r++) {
+        for (let c = 1; c < columns; c++) {
+            if (!board[r][c].src.includes("blank")) {
+                let currentCandy = board[r][c].src;
+                let previousCandy = board[r][c - 1].src;
+
+                board[r][c].src = previousCandy;
+                board[r][c - 1].src = currentCandy;
+            }
+        }
+    }
+    checkAndCrush();
+}
+
+function moveCandiesDown() {
+    for (let c = 0; c < columns; c++) {
+        for (let r = rows - 2; r >= 0; r--) {
+            if (!board[r][c].src.includes("blank")) {
+                let currentCandy = board[r][c].src;
+                let belowCandy = board[r + 1][c].src;
+
+                board[r][c].src = belowCandy;
+                board[r + 1][c].src = currentCandy;
+            }
+        }
+    }
+    checkAndCrush();
+
+}
+
+function moveCandiesUp() {
+    for (let c = 0; c < columns; c++) {
+        for (let r = 1; r < rows; r++) {
+            if (!board[r][c].src.includes("blank")) {
+                let currentCandy = board[r][c].src;
+                let aboveCandy = board[r - 1][c].src;
+
+                board[r][c].src = aboveCandy;
+                board[r - 1][c].src = currentCandy;
+            }
+        }
+    }
+    checkAndCrush();
+}
+function checkAndCrush() {
+    crushCandy();
+    slideCandy();
+    generateCandy();
+    score+=30;
     document.getElementById("score").innerText = score;
 }
