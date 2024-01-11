@@ -53,3 +53,15 @@ body {
 #resetButton:hover {
     background-color: #45a049;
 }
+.popup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: black;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    z-index: 999;
+}
