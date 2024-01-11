@@ -229,76 +229,60 @@ function touchEnd() {
     let moveDown = yDiff > 0 && Math.abs(yDiff) > Math.abs(xDiff);
 
     if (moveLeft) {
-        moveTiles("left");
+        moveLeft();
     } else if (moveRight) {
-        moveTiles("right");
+        moveRight();
     } else if (moveUp) {
-        moveTiles("up");
+        moveUp();
     } else if (moveDown) {
-        moveTiles("down");
+        moveDown();
     }
 }
-
-function moveTiles(direction) {
-    for (let r = 0; r < rows; r++) {
-        for (let c = 0; c < columns - 1; c++) {
-            if (direction === "left") {
-                swapTiles(board[r][c], board[r][c + 1]);
-            } else if (direction === "right") {
-                swapTiles(board[r][c], board[r][c + 1]);
-            } else if (direction === "up") {
-                swapTiles(board[r][c], board[r + 1][c]);
-            } else if (direction === "down") {
-                swapTiles(board[r][c], board[r + 1][c]);
-            }
-        }
-    }
-
-    crushCandy();
-    slideCandy();
-    generateCandy();
-}
-
-
-
 
 function moveLeft() {
     for (let r = 0; r < rows; r++) {
-        for (let c = 0; c < columns - 1; c++) {
-            swapTiles(board[r][c], board[r][c + 1]);
+        for (let c = 0; c < columns-1; c++) {
+            let currImg = board[r][c].src;
+            let otherImg = board[r][c+1].src;
+            board[r][c].src = otherImg;
+            board[r][c+1].src = currImg;
         }
     }
 }
 
 function moveRight() {
     for (let r = 0; r < rows; r++) {
-        for (let c = columns - 1; c > 0; c--) {
-            swapTiles(board[r][c], board[r][c - 1]);
+        for (let c = columns-1; c > 0; c--) {
+            let currImg = board[r][c].src;
+            let otherImg = board[r][c-1].src;
+            board[r][c].src = otherImg;
+            board[r][c-1].src = currImg;
         }
     }
 }
 
 function moveUp() {
     for (let c = 0; c < columns; c++) {
-        for (let r = 0; r < rows - 1; r++) {
-            swapTiles(board[r][c], board[r + 1][c]);
+        for (let r = 0; r < rows-1; r++) {
+            let currImg = board[r][c].src;
+            let otherImg = board[r+1][c].src;
+            board[r][c].src = otherImg;
+            board[r+1][c].src = currImg;
         }
     }
 }
 
 function moveDown() {
     for (let c = 0; c < columns; c++) {
-        for (let r = rows - 1; r > 0; r--) {
-            swapTiles(board[r][c], board[r - 1][c]);
+        for (let r = rows-1; r > 0; r--) {
+            let currImg = board[r][c].src;
+            let otherImg = board[r-1][c].src;
+            board[r][c].src = otherImg;
+            board[r-1][c].src = currImg;
         }
     }
 }
 
-function swapTiles(tile1, tile2) {
-    let tempSrc = tile1.src;
-    tile1.src = tile2.src;
-    tile2.src = tempSrc;
-}
 
 
 
