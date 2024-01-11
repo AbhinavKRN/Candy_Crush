@@ -27,7 +27,9 @@ function startGame() {
             let tile = document.createElement("img");
             tile.id = r.toString() + "-" + c.toString();
             tile.src = "./images/" + randomCandy() + ".png";
-
+            tile.addEventListener("touchstart", touchStart);
+            tile.addEventListener("touchmove", touchMove);
+            tile.addEventListener("touchend", touchEnd);
             tile.addEventListener("dragstart", dragStart);
             tile.addEventListener("dragover", dragOver);
             tile.addEventListener("dragenter", dragEnter);
@@ -187,104 +189,100 @@ function resetScore() {
     document.getElementById("score").innerText = score;
 }
 
-function touchStart(event) {
-    startX = event.touches[0].clientX;
-    startY = event.touches[0].clientY;
+window.onload = function() {
+    startGame();
+    showPopup();
+    window.setInterval(function(){
+        crushCandy();
+        slideCandy();
+        generateCandy();
+    }, 100);
 }
 
-function touchEnd(event) {
-    endX = event.changedTouches[0].clientX;
-    endY = event.changedTouches[0].clientY;
+function showPopup() {
+    var popup = document.getElementById("popup");
+    popup.style.display = "block";
 
-    handleSwipe();
+    setTimeout(function() {
+        popup.style.display = "none";
+    }, 2000); 
 }
 
-function handleSwipe() {
-    var deltaX = endX - startX;
-    var deltaY = endY - startY;
 
-    if (Math.abs(deltaX) > Math.abs(deltaY)) {
-        if (deltaX > 0) {
-            moveCandiesRight();
-        } else {
-            moveCandiesLeft();
-        }
-    } else {
-        if (deltaY > 0) {
-            moveCandiesDown();
-        } else {
-            moveCandiesUp();
-        }
+function touchStart(e) {
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+}
+
+function touchMove(e) {
+    endX = e.touches[0].clientX;
+    endY = e.touches[0].clientY;
+}
+
+function touchEnd() {
+    let xDiff = endX - startX;
+    let yDiff = endY - startY;
+
+    let moveLeft = xDiff < 0 && Math.abs(xDiff) > Math.abs(yDiff);
+    let moveRight = xDiff > 0 && Math.abs(xDiff) > Math.abs(yDiff);
+    let moveUp = yDiff < 0 && Math.abs(yDiff) > Math.abs(xDiff);
+    let moveDown = yDiff > 0 && Math.abs(yDiff) > Math.abs(xDiff);
+
+    if (moveLeft) {
+        moveLeft();
+    } else if (moveRight) {
+        moveRight();
+    } else if (moveUp) {
+        moveUp();
+    } else if (moveDown) {
+        moveDown();
     }
 }
 
-document.addEventListener('touchstart', touchStart);
-document.addEventListener('touchend', touchEnd);
-
-function moveCandiesRight() {
+function moveLeft() {
     for (let r = 0; r < rows; r++) {
-        for (let c = columns - 2; c >= 0; c--) {
-            if (!board[r][c].src.includes("blank")) {
-                let currentCandy = board[r][c].src;
-                let nextCandy = board[r][c + 1].src;
-
-                board[r][c].src = nextCandy;
-                board[r][c + 1].src = currentCandy;
-            }
+        for (let c = 0; c < columns-1; c++) {
+            let currImg = board[r][c].src;
+            let otherImg = board[r][c+1].src;
+            board[r][c].src = otherImg;
+            board[r][c+1].src = currImg;
         }
     }
-    checkAndCrush();
 }
 
-function moveCandiesLeft() {
+function moveRight() {
     for (let r = 0; r < rows; r++) {
-        for (let c = 1; c < columns; c++) {
-            if (!board[r][c].src.includes("blank")) {
-                let currentCandy = board[r][c].src;
-                let previousCandy = board[r][c - 1].src;
-
-                board[r][c].src = previousCandy;
-                board[r][c - 1].src = currentCandy;
-            }
+        for (let c = columns-1; c > 0; c--) {
+            let currImg = board[r][c].src;
+            let otherImg = board[r][c-1].src;
+            board[r][c].src = otherImg;
+            board[r][c-1].src = currImg;
         }
     }
-    checkAndCrush();
 }
 
-function moveCandiesDown() {
+function moveUp() {
     for (let c = 0; c < columns; c++) {
-        for (let r = rows - 2; r >= 0; r--) {
-            if (!board[r][c].src.includes("blank")) {
-                let currentCandy = board[r][c].src;
-                let belowCandy = board[r + 1][c].src;
-
-                board[r][c].src = belowCandy;
-                board[r + 1][c].src = currentCandy;
-            }
+        for (let r = 0; r < rows-1; r++) {
+            let currImg = board[r][c].src;
+            let otherImg = board[r+1][c].src;
+            board[r][c].src = otherImg;
+            board[r+1][c].src = currImg;
         }
     }
-    checkAndCrush();
-
 }
 
-function moveCandiesUp() {
+function moveDown() {
     for (let c = 0; c < columns; c++) {
-        for (let r = 1; r < rows; r++) {
-            if (!board[r][c].src.includes("blank")) {
-                let currentCandy = board[r][c].src;
-                let aboveCandy = board[r - 1][c].src;
-
-                board[r][c].src = aboveCandy;
-                board[r - 1][c].src = currentCandy;
-            }
+        for (let r = rows-1; r > 0; r--) {
+            let currImg = board[r][c].src;
+            let otherImg = board[r-1][c].src;
+            board[r][c].src = otherImg;
+            board[r-1][c].src = currImg;
         }
     }
-    checkAndCrush();
 }
-function checkAndCrush() {
-    crushCandy();
-    slideCandy();
-    generateCandy();
-    score+=30;
-    document.getElementById("score").innerText = score;
-}
+
+
+
+
