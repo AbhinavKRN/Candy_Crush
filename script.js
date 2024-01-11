@@ -283,6 +283,44 @@ function moveDown() {
     }
 }
 
+function moveLeft() {
+    for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < columns - 1; c++) {
+            swapTiles(board[r][c], board[r][c + 1]);
+        }
+    }
+}
+
+function moveRight() {
+    for (let r = 0; r < rows; r++) {
+        for (let c = columns - 1; c > 0; c--) {
+            swapTiles(board[r][c], board[r][c - 1]);
+        }
+    }
+}
+
+function moveUp() {
+    for (let c = 0; c < columns; c++) {
+        for (let r = 0; r < rows - 1; r++) {
+            swapTiles(board[r][c], board[r + 1][c]);
+        }
+    }
+}
+
+function moveDown() {
+    for (let c = 0; c < columns; c++) {
+        for (let r = rows - 1; r > 0; r--) {
+            swapTiles(board[r][c], board[r - 1][c]);
+        }
+    }
+}
+
+function swapTiles(tile1, tile2) {
+    let tempSrc = tile1.src;
+    tile1.src = tile2.src;
+    tile2.src = tempSrc;
+}
+
 
 
 
