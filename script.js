@@ -3,9 +3,33 @@ var board = [];
 var rows = 9;
 var columns = 9;
 let score = 0;
+let time = 0;
+var timerInterval;
 var currTile;
 var otherTile;
 var startX, startY, endX, endY;
+
+window.onload = function() {
+    startGame();
+    showPopup();
+    timerInterval = setInterval(updateTimer, 1000); 
+};
+
+function updateTimer() {
+    time++;
+    document.getElementById("timer").innerText = time + " seconds";
+}
+
+function resetGame() {
+    clearInterval(timerInterval);
+    time = 0;
+    score = 0;
+    document.getElementById("score").innerText = score;
+    document.getElementById("timer").innerText = time + " seconds";
+    startGame();
+    showPopup();
+    timerInterval = setInterval(updateTimer, 1000);
+}
 window.onload = function() {
     startGame();
     window.setInterval(function(){
