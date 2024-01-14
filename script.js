@@ -3,7 +3,7 @@ var board = [];
 var rows = 9;
 var columns = 9;
 let score = 0;
-let time = 0;
+let time = 180; // Initial countdown time in seconds
 var timerInterval;
 var currTile;
 var otherTile;
@@ -12,24 +12,40 @@ var startX, startY, endX, endY;
 window.onload = function() {
     startGame();
     showPopup();
-    timerInterval = setInterval(updateTimer, 1000); 
+    updateTimer(); // Initial display of timer
+    timerInterval = setInterval(updateTimer, 1000); // Update timer every second
 };
 
 function updateTimer() {
-    time++;
-    document.getElementById("timer").innerText = time + " seconds";
+    if (time > 0) {
+        time--;
+        document.getElementById("timer").innerText = formatTime(time);
+    } else {
+        clearInterval(timerInterval);
+        alert("Game over! Time's up!");
+        // Add any other logic for game over or reset here
+    }
+}
+
+function formatTime(seconds) {
+    var minutes = Math.floor(seconds / 60);
+    var remainingSeconds = seconds % 60;
+    return minutes + ":" + (remainingSeconds < 10 ? "0" : "") + remainingSeconds;
 }
 
 function resetGame() {
     clearInterval(timerInterval);
-    time = 0;
+    time = 180;
     score = 0;
     document.getElementById("score").innerText = score;
-    document.getElementById("timer").innerText = time + " seconds";
+    document.getElementById("timer").innerText = formatTime(time);
     startGame();
     showPopup();
     timerInterval = setInterval(updateTimer, 1000);
 }
+
+// Rest of your game logic remains unchanged...
+
 window.onload = function() {
     startGame();
     window.setInterval(function(){
